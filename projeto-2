@@ -1,0 +1,93 @@
+
+const int ledVerde1 = 13;
+const int ledVerde2 = 12;
+const int ledAmarelo1 = 11;
+const int ledAmarelo2 = 10;
+const int ledVermelho1 = 9;
+const int ledVermelho2 = 8;
+const int buzzer = 3;
+long microsec = 0;
+float distanciaCM = 0;
+
+long readUltrasonicDistance(int triggerPin, int echoPin)
+{
+  pinMode(triggerPin, OUTPUT);  // Clear the trigger
+  digitalWrite(triggerPin, LOW);
+  delayMicroseconds(2);
+  // Sets the trigger pin to HIGH state for 10 microseconds
+  digitalWrite(triggerPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(triggerPin, LOW);
+  pinMode(echoPin, INPUT);
+  // Reads the echo pin, and returns the sound wave travel time in microseconds
+  return pulseIn(echoPin, HIGH);
+}
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(ledVerde1,OUTPUT);
+  pinMode(ledVerde2,OUTPUT);
+  pinMode(ledAmarelo1,OUTPUT);
+  pinMode(ledAmarelo2,OUTPUT);
+  pinMode(ledVermelho1,OUTPUT);
+  pinMode(ledVermelho2,OUTPUT);
+  pinMode(buzzer, OUTPUT);
+}
+void loop() {
+ distanciaCM = 0.01723 * readUltrasonicDistance(7, 6);
+ ledDistancia();
+ Serial.print(distanciaCM);
+ Serial.println(" cm");
+ delay(1000);
+}
+void ledDistancia() {
+ digitalWrite(ledVerde1,LOW);
+ digitalWrite(ledAmarelo1,LOW);
+ digitalWrite(ledVermelho1,LOW);
+ digitalWrite(ledVerde2,LOW);
+ digitalWrite(ledAmarelo2,LOW);
+ digitalWrite(ledVermelho2,LOW);
+
+ if (distanciaCM <= 45){
+ digitalWrite(ledVerde1,HIGH);
+ }
+ if (distanciaCM <= 45 and distanciaCM >=40){
+   tone(3,330,500);
+   delay(1500);
+ }
+ if (distanciaCM <=40){
+ digitalWrite(ledVerde2,HIGH);
+ }
+ if (distanciaCM <= 40 and distanciaCM >=30){
+   tone(3,330,500);
+  delay(1000); 
+ }
+ if (distanciaCM <=30){
+ digitalWrite(ledAmarelo1,HIGH);
+ }
+ if (distanciaCM <= 30 and distanciaCM >=20){
+   tone(3,396,500);
+   delay(500);
+ }
+ if (distanciaCM <=20){
+ 	digitalWrite(ledAmarelo2,HIGH);
+ }
+ if (distanciaCM <= 20 and distanciaCM >=10){
+   	tone(3,396,500);
+   	delay(250);
+ }
+ if (distanciaCM <= 10){
+ digitalWrite(ledVermelho1,HIGH);
+ }	
+ if (distanciaCM <= 10 and distanciaCM >=5){
+   tone(3,495,500);
+   delay(125);
+ }	
+ if (distanciaCM <= 5){
+ 	digitalWrite(ledVermelho2,HIGH);
+ }
+ if (distanciaCM <= 5 and distanciaCM >=0){
+   tone(3,550,500);
+   delay(60);
+ }	
+}
